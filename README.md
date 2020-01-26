@@ -9,4 +9,4 @@ I want to find the top players for a day (basketball reference already provides 
 I also need to make sure the players returned are free agents in my league (that may be challenging).
 
 Etc.
-  - how to not have git ask for password all the time if you used ssh instead of http: git config credential.helper store
+  - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
