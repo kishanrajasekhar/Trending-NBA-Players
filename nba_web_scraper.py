@@ -2,13 +2,37 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import pandas as pd
+import argparse, sys
 
 # This url shows to top 100 players of yesterday's basketball games
 # To show a specific date, append these query parameter to the url
 # (e.g January 24, 2020: ?month=01&day=24&year=2020&type=all)
-BB_REFERENCE_URL ="https://www.basketball-reference.com/friv/dailyleaders.fcgi"
+url = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"
 
-html = urlopen(BB_REFERENCE_URL)
+parser=argparse.ArgumentParser()
+
+parser.add_argument('--year', help='year of date of the player stats to look up')
+parser.add_argument('--month', help='month (number from 1 to 12) of date of the player stats to look up')
+parser.add_argument('--day', help='day of date of the player stats to look up')
+
+args=parser.parse_args()
+
+year = f'{args.year}'
+month = f'{args.month}'
+day = f'{args.day}'
+
+if year == 'None' and month == 'None' and day == 'None':
+    # default url is used, which shows the stats of yesterday's games
+    pass
+elif year == 'None' or month == 'None' or day == 'None':
+    print('Must specify entire date (year, month and day). Returning yesterday\'s stats')
+else:
+    url += '?month={}&day={}&year={}'.format(month, day, year)
+        
+
+print(url)
+
+html = urlopen(url)
 soup = BeautifulSoup(html, features="html.parser")
 
 table = soup.findAll('tr')
@@ -94,6 +118,8 @@ for player in player_stats:
 player_ftpts.sort(key=lambda tup: tup[1], reverse=True)
 
 for player in player_ftpts:
+    if player[1] < 25:
+        break
     print('{}: ftps - {}'.format(player[0], player[1]))
 
 ##stats = pd.DataFrame(player_stats, columns=headers[1:])
