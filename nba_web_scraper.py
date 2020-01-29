@@ -14,12 +14,15 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--year', help='year of date of the player stats to look up')
 parser.add_argument('--month', help='month (number from 1 to 12) of date of the player stats to look up')
 parser.add_argument('--day', help='day of date of the player stats to look up')
+parser.add_argument('--ftpts_limit', help='fantasy limit: don\'t include players who produce below the limit')
 
 args=parser.parse_args()
 
 year = f'{args.year}'
 month = f'{args.month}'
 day = f'{args.day}'
+ftpts_limit = f'{args.ftpts_limit}'
+ftpts_limit = 25 if ftpts_limit == 'None' else int(ftpts_limit)
 
 if year == 'None' and month == 'None' and day == 'None':
     # default url is used, which shows the stats of yesterday's games
@@ -118,7 +121,7 @@ for player in player_stats:
 player_ftpts.sort(key=lambda tup: tup[1], reverse=True)
 
 for player in player_ftpts:
-    if player[1] < 25:
+    if player[1] < ftpts_limit:
         break
     print('{}: ftps - {}'.format(player[0], player[1]))
 
