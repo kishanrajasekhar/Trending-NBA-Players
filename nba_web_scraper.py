@@ -41,7 +41,10 @@ soup = BeautifulSoup(html, features="html.parser")
 table = soup.findAll('tr')
 
 # column headers
-headers = [th.getText() for th in table[0].findAll('th')]
+if len(table):
+    headers = [th.getText() for th in table[0].findAll('th')]
+else:
+    headers = []
 
 three_point = "3P"
 points = "PTS"
@@ -63,7 +66,11 @@ for i in range(len(headers)):
         score_indices[headers[i]] = i - 1  # -1 since rank not included in player list
 
 rows = table[1:]
-player_stats = [[td.getText() for td in rows[i].findAll('td')] for i in range(len(rows))]
+
+if len(table):
+    player_stats = [[td.getText() for td in rows[i].findAll('td')] for i in range(len(rows))]
+else:
+    player_stats = []
 
 player_ftpts = []
 for player in player_stats:
