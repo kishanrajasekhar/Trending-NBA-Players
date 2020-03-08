@@ -1,0 +1,126 @@
+{
+    "Eastern Conference": [
+        {
+            "name": "Bucks",
+            "location": "Milwaukee"
+        },
+        {
+            "name": "Raptors",
+            "location": "Toronto"
+        },
+        {
+            "name": "Celtics",
+            "location": "Boston"
+        },
+        {
+            "name": "Heat",
+            "location": "Miami"
+        },
+        {
+            "name": "Pacers",
+            "location": "Indiana"
+        },
+        {
+            "name": "76ers",
+            "location": "Philadelphia"
+        },
+        {
+            "name": "Nets",
+            "location": "Brooklyn"
+        },
+        {
+            "name": "Magic",
+            "location": "Orlando"
+        },
+        {
+            "name": "Wizards",
+            "location": "Washington"
+        },
+        {
+            "name": "Hornets",
+            "location": "Charlotte"
+        },
+        {
+            "name": "Bulls",
+            "location": "Chicago"
+        },
+        {
+            "name": "Pistons",
+            "location": "Detroit"
+        },
+        {
+            "name": "Knicks",
+            "location": "New York"
+        },
+        {
+            "name": "Hawks",
+            "location": "Atlanta"
+        },
+        {
+            "name": "Cavaliers",
+            "location": "Cleveland"
+        }
+    ],
+    "Western Conference": [
+        {
+            "name": "Lakers",
+            "location": "Los Angeles"
+        },
+        {
+            "name": "Clippers",
+            "location": "Los Angeles"
+        },
+        {
+            "name": "Nuggets",
+            "location": "Denver"
+        },
+        {
+            "name": "Jazz",
+            "location": "Utah"
+        },
+        {
+            "name": "Rockets",
+            "location": "Houston"
+        },
+        {
+            "name": "Thunder",
+            "location": "Oklahoma City"
+        },
+        {
+            "name": "Mavericks",
+            "location": "Dallas"
+        },
+        {
+            "name": "Grizzlies",
+            "location": "Memphis"
+        },
+        {
+            "name": "Trail Blazers",
+            "location": "Portland"
+        },
+        {
+            "name": "Kings",
+            "location": "Sacramento"
+        },
+        {
+            "name": "Pelicans",
+            "location": "New Orleans"
+        },
+        {
+            "name": "Spurs",
+            "location": "San Antonio"
+        },
+        {
+            "name": "Suns",
+            "location": "Phoenix"
+        },
+        {
+            "name": "Timberwolves",
+            "location": "Minnesota"
+        },
+        {
+            "name": "Warriors",
+            "location": "Golden State"
+        }
+    ]
+}
