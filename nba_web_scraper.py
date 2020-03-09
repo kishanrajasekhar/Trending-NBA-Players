@@ -1,14 +1,29 @@
 # web scraper for nba stats
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import pandas as pd
-import argparse, sys
-
+import argparse
+from datetime import date, timedelta
 # This url shows to top 100 players of yesterday's basketball games
 # To show a specific date, append these query parameter to the url
 # (e.g January 24, 2020: ?month=01&day=24&year=2020&type=all)
-url = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"
+NBA_REFERENCE_URL = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"
+# players producing less fantasy points under this limit will not be shown in the list, unless a different
+# fantasy points limit is specified as an argument (--ftpts_limit)
+DEFAULT_FTPTS_LIMIT = 25
 
+
+def get_yesterday_year_month_day() -> [int, int, int]:
+    """Return yesterday's year, month (a number from 1 to 12), and day (a number from 1 to 31). If a date isn't
+    specified, yesterday's date will be used as the default.
+
+    :return: [year, month, day]
+    """
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    return [yesterday.year, yesterday.month, yesterday.day]
+
+
+url = NBA_REFERENCE_URL
 parser=argparse.ArgumentParser()
 
 parser.add_argument('--year', help='year of date of the player stats to look up')
@@ -22,17 +37,19 @@ year = f'{args.year}'
 month = f'{args.month}'
 day = f'{args.day}'
 ftpts_limit = f'{args.ftpts_limit}'
-ftpts_limit = 25 if ftpts_limit == 'None' else int(ftpts_limit)
+ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
 
 if year == 'None' and month == 'None' and day == 'None':
     # default url is used, which shows the stats of yesterday's games
-    pass
+    year, month, day = get_yesterday_year_month_day()
 elif year == 'None' or month == 'None' or day == 'None':
     print('Must specify entire date (year, month and day). Returning yesterday\'s stats')
+    year, month, day = get_yesterday_year_month_day()
 else:
-    url += '?month={}&day={}&year={}'.format(month, day, year)
-        
+    # TODO: throw error if the date is ahead of yesterday's date
+    pass
 
+url += '?month={}&day={}&year={}'.format(month, day, year)
 print(url)
 
 html = urlopen(url)
@@ -131,6 +148,3 @@ for player in player_ftpts:
     if player[1] < ftpts_limit:
         break
     print('{}: ftps - {}'.format(player[0], player[1]))
-
-##stats = pd.DataFrame(player_stats, columns=headers[1:])
-##stats.head(10)
