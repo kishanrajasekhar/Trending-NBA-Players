@@ -10,10 +10,12 @@ def populate_nba_teams():
             for team in nba_teams[conference]:
                 name = team["name"]
                 location = team["location"]
-                team_obj = Team(name=name, location=location, conference=conference)
+                abbreviation = team["abbreviation"]
+                team_obj = Team(name=name, location=location, conference=conference, abbreviation=abbreviation)
                 try:
                     team_obj.save()
                     print("Saved {} {} to the database".format(location, name))
                 except NotUniqueError:
                     print("{} {} has already been saved to the database. Updating information".format(location, name))
-                    Team.objects.get(name=name, location=location).update(conference=conference)
+                    Team.objects.get(name=name, location=location).update(conference=conference,
+                                                                          abbreviation=abbreviation)
