@@ -46,8 +46,13 @@ elif year == 'None' or month == 'None' or day == 'None':
     print('Must specify entire date (year, month and day). Returning yesterday\'s stats')
     year, month, day = get_yesterday_year_month_day()
 else:
-    # TODO: throw error if the date is ahead of yesterday's date
-    pass
+    # if the requested date is ahead of yesterday's date, use yesterday's date
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    date_requested = date(year=int(year), month=int(month), day=int(day))
+    if date_requested > yesterday:
+        print("Date cannot be later than yesterday. Using yesterday's date")
+        year, month, day = get_yesterday_year_month_day()
 
 url += '?month={}&day={}&year={}'.format(month, day, year)
 print(url)
