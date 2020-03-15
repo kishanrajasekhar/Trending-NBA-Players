@@ -16,7 +16,7 @@ Who knows, this project might evolve into something greater.
 
 Trello board (my budget jira): https://trello.com/b/VHNj95qc/nba-data. I'll try to keep this organized.
 
-Setup:
+Setup for web scraper:
 1. Clone this repo
 2. Setup a python virtual environment for python3 in the git project
     1. Windows: `python -m venv .\my-venv` (Doesn't have to be called my-venv, could be called whatever you want). Make sure the python command is setup for python 3. If you have both python2 and python3 on your computer, you may have to do `py -3 -m venv .\my-venv`
@@ -26,6 +26,15 @@ Setup:
 5. Run the script: `python nba_web_scraper.py`. You may have to pip install `bs4`. The virtual environment keeps the pip installs from conflicting with other projects.
 6. To exit the virtual environment, type the command `deactivate`
 
+Setup to populate database
+1. Download mongodb
+    1. Windows 10 setup
+        1. Go to environment variables. Under System Variables look for the variable called "Path". Open it up and the location of the mongodb directory you just loaded. There is a "bin" directory. Make sure the path you put points to that directory (e.g "C:\Program Files\MongoDB\Server\4.2\bin")
+2. Open a cmd and run `mongod` to get mongodb running.
+3. In the python virtual environment run the script `python nba_database_populator.py`. Check your database afterwards to see if the `team` collection in your database has been populated. The `player` collection might be populated as well.
+    1. Tools to look at your database
+        1. MongoDB Compass: Click the option "Fill in connection fields individually. Enter `localhost` for hostname and `27017` for the port (the defaults).
+        2. Robo 3T
 
 Etc.
   - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
