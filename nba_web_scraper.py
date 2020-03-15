@@ -1,4 +1,5 @@
-# web scraper for nba stats
+# This script is responsible for scraping nba reference for nba player stats
+
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import argparse
@@ -30,7 +31,11 @@ fantasy_scores = {THREE_POINT_COL_TITLE: 1, POINTS_COL_TITLE: 1, TOTAL_REBOUNDS_
                   ASSISTS_COL_TITLE: 1.5, BLOCKS_COL_TITLE: 3, STEALS_COL_TITLE: 3, TURN_OVERS_COL_TITLE: -1}
 
 
-def setup_parser():
+def setup_parser() -> argparse.ArgumentParser:
+    """Setup the parser to read the command line arguments
+
+    :return: The parser
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--year', help='year of date of the player stats to look up')
     parser.add_argument('--month', help='month (number from 1 to 12) of date of the player stats to look up')
@@ -50,7 +55,16 @@ def get_yesterday_year_month_day() -> [int, int, int]:
     return [yesterday.year, yesterday.month, yesterday.day]
 
 
-def get_nba_reference_url(base_uri, year, month, day) -> str:
+def get_nba_reference_url(base_url, year, month, day) -> str:
+    """Create the url for nba reference
+
+    :param base_url: the url with the domain name (basketball-reference) and resource name (/friv/dailyleaders.fcgi)
+           of the nba reference daily leader page
+    :param year: the year parameter of the url. The value is the year number (e.g 2020)
+    :param month: the month parameter of the url. The value is a number from 1 to 12
+    :param day: the day parameter of the url. The value is a number from 1 to 31
+    :return: The completed url
+    """
     if year == 'None' and month == 'None' and day == 'None':
         # default url is used, which shows the stats of yesterday's games
         year, month, day = get_yesterday_year_month_day()
@@ -66,10 +80,15 @@ def get_nba_reference_url(base_uri, year, month, day) -> str:
             print("Date cannot be later than yesterday. Using yesterday's date")
             year, month, day = get_yesterday_year_month_day()
 
-    return base_uri + '?month={}&day={}&year={}'.format(month, day, year)
+    return base_url + '?month={}&day={}&year={}'.format(month, day, year)
 
 
-def get_basketball_reference_html_table(uri):
+def get_basketball_reference_html_table(url) -> 'beautiful soup table':
+    """Use beautiful soup to parse the html table on the basketball reference daily leaders page.
+
+    :param url: the url of the basketball reference daily leader page
+    :return: parsed html table
+    """
     html = urlopen(url)
     soup = BeautifulSoup(html, features="html.parser")
     table = soup.findAll('tr')

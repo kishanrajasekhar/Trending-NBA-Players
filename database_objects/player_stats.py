@@ -4,6 +4,7 @@ from database_objects.team import Team
 
 
 class PlayerStats(Document):
+    """A database document of the stats of a player during a game"""
     player = ReferenceField(Player, required=True, unique_with='game_date')
     game_date = DateTimeField(required=True)
     team = ReferenceField(Team, required=True)
