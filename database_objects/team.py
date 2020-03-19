@@ -10,5 +10,5 @@ class Team(Document):
     coaches = ListField(StringField(), null=True)
     coaches_years = ListField(ListField(DateTimeField), null=True)
     year_founded = DateTimeField()
-    abbreviation = StringField()
+    abbreviation = StringField(unique=True)
     conference = StringField()

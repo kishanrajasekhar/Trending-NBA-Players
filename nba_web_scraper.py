@@ -21,6 +21,14 @@ BLOCKS_COL_TITLE = "BLK"
 STEALS_COL_TITLE = "STL"
 TURN_OVERS_COL_TITLE = "TOV"
 
+# basketball reference column indexes
+PLAYER_NAME_COL = 0
+PLAYER_TEAM_COL = 1
+IS_AWAY_COL =  2
+OPPONENT_COL = 3
+IS_WIN_COL = 4
+MINUTES_PLAYED_COL = 5
+
 # fantasy points for these categories
 DOUBLE_DOUBLE = 6
 TRIPLE_DOUBLE = 12

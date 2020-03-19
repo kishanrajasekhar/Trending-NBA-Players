@@ -2,7 +2,10 @@ from mongoengine import Document, ReferenceField, BooleanField, IntField, DateTi
 from database_objects.player import Player
 from database_objects.team import Team
 
-
+# LEARNING NOTE: MongoDb allows for a flexible schema. I can add/edit/remove fields any time I want here, in Python,
+# without messing with the database.
+# I forgot SQL, but the internet it's more rigid. It seems that changing a schema in SQL is more troublesome.
+# I'll have to look at SQL to see if that's the case.
 class PlayerStats(Document):
     """A database document of the stats of a player during a game"""
     player = ReferenceField(Player, required=True, unique_with='game_date')
