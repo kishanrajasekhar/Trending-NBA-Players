@@ -19,6 +19,35 @@ TRIPLE_DOUBLE_FANTASY = 12
 QUADRUPLE_DOUBLE_FANTASY = 400
 
 
+def get_date_object(year, month, day) -> str:
+    """Return a date object with the year, month, and date specified.
+
+    :param year: the year parameter of the url. The value is the year number (e.g 2020)
+    :param month: the month parameter of the url. The value is a number from 1 to 12
+    :param day: the day parameter of the url. The value is a number from 1 to 31
+    :return: The completed url
+    """
+    if year == 'None' and month == 'None' and day == 'None':
+        # default url is used, which shows the stats of yesterday's games
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        return yesterday
+    elif year == 'None' or month == 'None' or day == 'None':
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        return yesterday
+    else:
+        # if the requested date is ahead of yesterday's date, use yesterday's date
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        date_requested = date(year=int(year), month=int(month), day=int(day))
+        if date_requested > yesterday:
+            print("Date cannot be later than yesterday. Using yesterday's date")
+            return yesterday
+        else:
+            return date_requested
+
+
 def calculate_fantasy_points(points, three_points_made, total_rebounds, assists, steals,
                              blocks, turnovers) -> float:
     """Calculate the number of fantasy points the player gets.
@@ -78,7 +107,7 @@ if __name__ == '__main__':
     day = f'{args.day}'
     ftpts_limit = f'{args.ftpts_limit}'
     ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
-    print(ftpts_limit)
+    datetime_obj = get_date_object(year, month, day)
 
     url = get_nba_reference_url(url, year, month, day)
     print(url)
@@ -172,4 +201,16 @@ if __name__ == '__main__':
               f'orb: {offensive_rebounds}, drb: {defensive_rebounds} ast: {assists}, stl: {steals}, blk: {blocks}, '
               f'tov: {turnovers}, ftpts: {ftpts}')
 
-        break
+        # Insert PlayerStats document into the database
+        # TODO: allow updating existing document if user passes in --update
+        try:
+            player_stats = PlayerStats.objects.get(player=player_db_obj, game_date=datetime_obj)
+            print('\tStats already in the database.')
+        except DoesNotExist:
+            player_stats = PlayerStats(player=player_db_obj, game_date=datetime_obj, team=players_team_obj,
+                                       opponent=opponent_team_obj, two_pointers_made=two_pointers_made,
+                                       three_pointers_made=three_pointers_made, free_throws_made=free_throws_made,
+                                       offensive_rebounds=offensive_rebounds, defensive_rebounds=defensive_rebounds,
+                                       assists=assists, steals=steals, blocks=blocks, turnovers=turnovers,
+                                       personal_fouls=personal_fouls, fantasy_points=ftpts)
+            player_stats.save()
