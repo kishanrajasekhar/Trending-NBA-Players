@@ -19,13 +19,12 @@ TRIPLE_DOUBLE_FANTASY = 12
 QUADRUPLE_DOUBLE_FANTASY = 400
 
 
-def calculate_fantasy_points(two_points_made, three_points_made, free_throws_made, total_rebounds, assists, steals,
+def calculate_fantasy_points(points, three_points_made, total_rebounds, assists, steals,
                              blocks, turnovers) -> float:
     """Calculate the number of fantasy points the player gets.
 
-    :param two_points_made: number of 2-pointers made
+    :param points: number of points made
     :param three_points_made: number of 3-pointers made
-    :param free_throws_made: number of free throws made
     :param total_rebounds: number of rebounds
     :param assists: number of assists
     :param steals: number of steals
@@ -35,10 +34,10 @@ def calculate_fantasy_points(two_points_made, three_points_made, free_throws_mad
     """
     num_10s = 0
 
-    fantasy_points = (two_points_made * 2) + free_throws_made + (three_points_made * 3)
+    fantasy_points = points
     num_10s = num_10s+1 if fantasy_points >= 10 else num_10s
 
-    fantasy_points += three_pointers_made * THREE_POINTERS_FANTASY
+    fantasy_points += three_points_made * THREE_POINTERS_FANTASY
 
     fantasy_points += total_rebounds * REBOUNDS_FANTASY
     num_10s = num_10s+1 if total_rebounds >= 10 else num_10s
@@ -79,6 +78,7 @@ if __name__ == '__main__':
     day = f'{args.day}'
     ftpts_limit = f'{args.ftpts_limit}'
     ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
+    print(ftpts_limit)
 
     url = get_nba_reference_url(url, year, month, day)
     print(url)
@@ -137,7 +137,6 @@ if __name__ == '__main__':
         opponent_team_name = opponent_team_obj.location + ' ' + opponent_team_obj.name
         win_message = 'won' if is_win else 'lost'
         home_message = 'away' if is_away_game else 'at home'
-        print(f"{name} of the {players_team_name} {win_message} against the {opponent_team_name} {home_message}")
 
         pts = int(player_data[POINTS_COL])
         field_goals_made = int(player_data[FIELD_GOALS_MADE_COL])
@@ -160,11 +159,14 @@ if __name__ == '__main__':
         personal_fouls = int(player_data[PERSONAL_FOULS_COL])
         plus_minus = float(player_data[PERSONAL_FOULS_COL])
 
-        ftpts = calculate_fantasy_points(two_pointers_made, three_pointers_made, free_throws_made,
-                                         offensive_rebounds+defensive_rebounds, assists, steals, blocks, turnovers)
+        points = (two_pointers_made * 2) + (three_pointers_made * 3) + free_throws_made
+        ftpts = calculate_fantasy_points(points, three_pointers_made, offensive_rebounds+defensive_rebounds, assists,
+                                         steals, blocks, turnovers)
 
         if ftpts < ftpts_limit:
-            break
+            continue
+
+        print(f"{name} of the {players_team_name} {win_message} against the {opponent_team_name} {home_message}")
 
         print(f'\t2pts: {two_pointers_made}, 3pts: {three_pointers_made}, ft: {free_throws_made}, '
               f'orb: {offensive_rebounds}, drb: {defensive_rebounds} ast: {assists}, stl: {steals}, blk: {blocks}, '
