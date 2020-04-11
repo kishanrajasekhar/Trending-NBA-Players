@@ -1,0 +1,50 @@
+Notes to help me in the future.
+
+Mongo pipeline example for getting cumulative fantasy points of each player from March 1st to March 7th
+
+[
+    {
+        '$match': {
+            'game_date': {
+                '$gte': datetime(2020, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
+                '$lte': datetime(2020, 3, 7, 0, 0, 0, tzinfo=timezone.utc)
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$player',
+            'fantasy_points': {
+                '$sum': '$fantasy_points'
+            }
+        }
+    }, {
+        '$sort': {
+            'fantasy_points': -1
+        }
+    }, {
+        '$lookup': {
+            'from': 'player',
+            'localField': '_id',
+            'foreignField': '_id',
+            'as': 'player'
+        }
+    }, {
+        '$project': {
+            '_id': 0,
+            'fantasy_points': 1,
+            'name': {
+                '$concat': [
+                    {
+                        '$arrayElemAt': [
+                            '$player.first_name', 0
+                        ]
+                    }, ' ', {
+                        '$arrayElemAt': [
+                            '$player.last_name', 0
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+]
