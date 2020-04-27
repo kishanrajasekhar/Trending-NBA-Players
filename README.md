@@ -36,5 +36,8 @@ Setup to populate database
         1. MongoDB Compass: Click the option "Fill in connection fields individually. Enter `localhost` for hostname and `27017` for the port (the defaults).
         2. Robo 3T
 
+How to populate the database with game stats of a specific date
+  - e.g.) March 11th 2020: `python nba_database_populator.py --month 3 --day 11 --year 2020`
+
 Etc.
   - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
