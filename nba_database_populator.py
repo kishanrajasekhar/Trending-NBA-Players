@@ -94,22 +94,20 @@ def calculate_fantasy_points(points, three_points_made, total_rebounds, assists,
     return fantasy_points
 
 
-if __name__ == '__main__':
-    connect('nba')
-    populate_nba_teams()
-    print()
-    # parse nba reference
-    url = NBA_REFERENCE_URL
-    args=setup_parser().parse_args()
+def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_limit) -> None:
+    """Populate the database with player statistics from games of a specific date.
 
-    year = f'{args.year}'
-    month = f'{args.month}'
-    day = f'{args.day}'
-    ftpts_limit = f'{args.ftpts_limit}'
-    ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
+    :param nba_reference_url: the url to get the player statistics from
+    :param year: the year of the date
+    :param month: the month of the date
+    :param day: the day of the date
+    :param fantasy_points_limit: the minimum fantasy points a player needs to have his stats added to the database
+    :return: None
+    """
+
     datetime_obj = get_date_object(year, month, day)
 
-    url = get_nba_reference_url(url, year, month, day)
+    url = get_nba_reference_url(nba_reference_url, datetime_obj.year, datetime_obj.month, datetime_obj.day)
     print(url)
 
     table = get_basketball_reference_html_table(url)
@@ -131,8 +129,6 @@ if __name__ == '__main__':
         player_stats = [[td.getText() for td in rows[i].findAll('td')] for i in range(len(rows))]
     else:
         player_stats = []
-
-    player_ftpts = []
 
     # LEARNING NOTE: Unfortunately Mongodb doesn't support atomic batch CREATES and UPDATES, unlike SQL
     # MongoDB doesn't guarantee ACID, unlike SQL. I have to loop through the html table and add or update player
@@ -189,10 +185,10 @@ if __name__ == '__main__':
         plus_minus = float(player_data[PERSONAL_FOULS_COL])
 
         points = (two_pointers_made * 2) + (three_pointers_made * 3) + free_throws_made
-        ftpts = calculate_fantasy_points(points, three_pointers_made, offensive_rebounds+defensive_rebounds, assists,
+        ftpts = calculate_fantasy_points(points, three_pointers_made, offensive_rebounds + defensive_rebounds, assists,
                                          steals, blocks, turnovers)
 
-        if ftpts < ftpts_limit:
+        if ftpts < fantasy_points_limit:
             continue
 
         print(f"{name} of the {players_team_name} {win_message} against the {opponent_team_name} {home_message}")
@@ -214,3 +210,20 @@ if __name__ == '__main__':
                                        assists=assists, steals=steals, blocks=blocks, turnovers=turnovers,
                                        personal_fouls=personal_fouls, fantasy_points=ftpts)
             player_stats.save()
+
+
+if __name__ == '__main__':
+    connect('nba')
+    populate_nba_teams()
+    print()
+    # parse nba reference
+    url = NBA_REFERENCE_URL
+    args=setup_parser().parse_args()
+
+    year = f'{args.year}'
+    month = f'{args.month}'
+    day = f'{args.day}'
+    ftpts_limit = f'{args.ftpts_limit}'
+    ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
+
+    populate_player_stats(url, year, month, day, ftpts_limit)
