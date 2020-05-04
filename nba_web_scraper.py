@@ -64,6 +64,7 @@ def setup_parser() -> argparse.ArgumentParser:
     parser.add_argument('--month', help='month (number from 1 to 12) of date of the player stats to look up')
     parser.add_argument('--day', help='day of date of the player stats to look up')
     parser.add_argument('--ftpts_limit', help='fantasy limit: don\'t include players who produce below the limit')
+    parser.add_argument('--update', help='whether or not to update the player_stats documents in the database')
     return parser
 
 

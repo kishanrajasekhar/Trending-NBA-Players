@@ -94,7 +94,7 @@ def calculate_fantasy_points(points, three_points_made, total_rebounds, assists,
     return fantasy_points
 
 
-def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_limit) -> None:
+def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_limit, update=False) -> None:
     """Populate the database with player statistics from games of a specific date.
 
     :param nba_reference_url: the url to get the player statistics from
@@ -102,6 +102,7 @@ def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_li
     :param month: the month of the date
     :param day: the day of the date
     :param fantasy_points_limit: the minimum fantasy points a player needs to have his stats added to the database
+    :param update: whether or not to update a player_stats document if it's already in the database
     :return: None
     """
 
@@ -198,17 +199,32 @@ def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_li
               f'tov: {turnovers}, ftpts: {ftpts}')
 
         # Insert PlayerStats document into the database
-        # TODO: allow updating existing document if user passes in --update
         try:
             player_stats = PlayerStats.objects.get(player=player_db_obj, game_date=datetime_obj)
-            print('\tStats already in the database.')
+            if update:
+                print('\tUpdating player information')
+                player_stats.update(team=players_team_obj, opponent=opponent_team_obj, victory=is_win,
+                                    is_home_game=not(is_away_game), two_pointers_made=two_pointers_made,
+                                    two_pointers_attempted=two_pointers_attempted,
+                                    three_pointers_made=three_pointers_made,
+                                    three_pointers_attempted=three_pointers_attempted,
+                                    free_throws_made=free_throws_made, free_throws_attempted=free_throws_attempted,
+                                    offensive_rebounds=offensive_rebounds, defensive_rebounds=defensive_rebounds,
+                                    assists=assists, steals=steals, blocks=blocks, turnovers=turnovers,
+                                    personal_fouls=personal_fouls, plus_minus=plus_minus, fantasy_points=ftpts)
+            else:
+                print('\tStats already in the database.')
         except DoesNotExist:
             player_stats = PlayerStats(player=player_db_obj, game_date=datetime_obj, team=players_team_obj,
-                                       opponent=opponent_team_obj, two_pointers_made=two_pointers_made,
-                                       three_pointers_made=three_pointers_made, free_throws_made=free_throws_made,
+                                       opponent=opponent_team_obj, victory=is_win, is_home_game=not(is_away_game),
+                                       two_pointers_made=two_pointers_made,
+                                       two_pointers_attempted=two_pointers_attempted,
+                                       three_pointers_made=three_pointers_made,
+                                       three_pointers_attempted=three_pointers_attempted,
+                                       free_throws_made=free_throws_made, free_throws_attempted=free_throws_attempted,
                                        offensive_rebounds=offensive_rebounds, defensive_rebounds=defensive_rebounds,
                                        assists=assists, steals=steals, blocks=blocks, turnovers=turnovers,
-                                       personal_fouls=personal_fouls, fantasy_points=ftpts)
+                                       personal_fouls=personal_fouls, plus_minus=plus_minus, fantasy_points=ftpts)
             player_stats.save()
 
 
@@ -225,5 +241,7 @@ if __name__ == '__main__':
     day = f'{args.day}'
     ftpts_limit = f'{args.ftpts_limit}'
     ftpts_limit = DEFAULT_FTPTS_LIMIT if ftpts_limit == 'None' else int(ftpts_limit)
+    update = f'{args.update}'
+    update = True if update == 'True' else False
 
-    populate_player_stats(url, year, month, day, ftpts_limit)
+    populate_player_stats(url, year, month, day, ftpts_limit, update)
