@@ -234,7 +234,7 @@ if __name__ == '__main__':
     print()
     # parse nba reference
     url = NBA_REFERENCE_URL
-    args=setup_parser().parse_args()
+    args = setup_parser().parse_args()
 
     year = f'{args.year}'
     month = f'{args.month}'
