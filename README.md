@@ -20,9 +20,11 @@ Setup for web scraper:
 1. Clone this repo
 2. Setup a python virtual environment for python3 in the git project
     1. Windows: `python -m venv .\my-venv` (Doesn't have to be called my-venv, could be called whatever you want). Make sure the python command is setup for python 3. If you have both python2 and python3 on your computer, you may have to do `py -3 -m venv .\my-venv`
+    2. Mac: `python3.6 -m venv nba-env`
 3. Add `my-venv` to `.gitignore` so that you don't accidently commit it. Your virtual environment does not need to be pushed.
 4. Activate the virual environment
-    1. `.\my-venv\Scripts\activate.bat`.
+    1. Windows: `.\my-venv\Scripts\activate.bat`
+    2. Mac: `source nba-env/bin/activate`
 5. Run the script: `python nba_web_scraper.py`. You may have to pip install `bs4`. The virtual environment keeps the pip installs from conflicting with other projects.
 6. To exit the virtual environment, type the command `deactivate`
 
