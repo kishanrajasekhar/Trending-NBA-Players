@@ -1,10 +1,13 @@
 from database_objects.team import Team
 from mongoengine import NotUniqueError
 import json
+import os
 
 
 def populate_nba_teams():
-    with open("init_scripts/nba_teams.json") as data_file:
+    THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+    my_file = os.path.join(THIS_FOLDER, 'nba_teams.json')
+    with open(my_file) as data_file:
         nba_teams = json.load(data_file)
         for conference in nba_teams.keys():
             for team in nba_teams[conference]:

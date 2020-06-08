@@ -1,4 +1,5 @@
-from nba_database_populator import get_date_object, populate_player_stats, NBA_REFERENCE_URL, DEFAULT_FTPTS_LIMIT
+from nba_database_populator import get_date_object, populate_player_stats, populate_nba_teams, NBA_REFERENCE_URL,\
+    DEFAULT_FTPTS_LIMIT
 from season_database_population_scripts.season_parser import setup_season_parser
 from mongoengine import connect
 import datetime
@@ -21,8 +22,11 @@ if __name__ == '__main__':
     print()
 
     connect('nba')
+    populate_nba_teams()
+    print()
     data_date = season_start
     while data_date <= season_temporary_end:
         print(data_date.year, data_date.month, data_date.day)
         populate_player_stats(url, data_date.year, data_date.month, data_date.day, ftpts_limit, update)
         data_date = data_date + datetime.timedelta(days=1)
+        print()
