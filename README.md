@@ -43,6 +43,22 @@ Trello board (my budget jira): https://trello.com/b/VHNj95qc/nba-data. I'll try 
   
 ### How to quickly populate the database with game stats of the 2019 to 2020 season
   - e.g.) `python season_database_population_scripts/2019_2020_season.py`... Or at least this is how I want this to work. This didn't work for me from the command line. I had to run the `2019_2020_season.py` script from PyCharm.
+  
+## Query Player Stats
+e.g.)How to get the cumulative fantasy points of each player from Jan 1st 2020 to March 11th 2020 (All 2020 games until Covid-19 cancellation). 
+```python nba_query_stats.py --year_start 2020 --month_start 1 --day_start 1 --year_end 2020 --month_end 3 --day_end 11```
+
+Sample output:
+```
+Player: Nikola Jokić, Fantasy Points: 1784.5
+Player: LeBron James, Fantasy Points: 1719.75
+Player: James Harden, Fantasy Points: 1682.0
+Player: Trae Young, Fantasy Points: 1642.75
+Player: Giannis Antetokounmpo, Fantasy Points: 1611.5
+Player: Hassan Whiteside, Fantasy Points: 1558.0
+Player: Nikola Vučević, Fantasy Points: 1557.25
+...
+```
 
 ## Etc.
   - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
