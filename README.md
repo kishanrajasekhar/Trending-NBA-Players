@@ -60,5 +60,7 @@ Player: Nikola Vučević, Fantasy Points: 1557.25
 ...
 ```
 
+Note: The cumulative player stats may not be accurate. By default, a player's game stats will not be saved to the database if the number of fantasy points the player earned that game is less than 25. Those bad games will be ignored when summing up a player's total fantasy points over a period of time. To omit this limit, pass in `--ftpts_limit -0` when you run the script to populate the database (maybe the default should just be 0). Also, a player's stats will not be saved for that date if the player is not included BasketBall Reference's NBA Daily Stats Leaders table for that date (e.g. https://www.basketball-reference.com/friv/dailyleaders.fcgi). I'm using this as a source because I don't want to bloat up the database with stats of every single NBA player. I just want players that fantasy teams might pick up, like the players who make the daily stats leaders list.
+
 ## Etc.
   - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
