@@ -21,7 +21,7 @@ def setup_query_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def query_nba_stats(start_date, end_date) -> []:
+def query_nba_stats(start_date: date, end_date: date) -> []:
     """Query the nba stats of players from all the games starting from the specified start date to the end date
     (inclusive).
 
