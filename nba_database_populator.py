@@ -131,10 +131,6 @@ def populate_player_stats(nba_reference_url, year, month, day, fantasy_points_li
     else:
         player_stats = []
 
-    # LEARNING NOTE: Unfortunately Mongodb doesn't support atomic batch CREATES and UPDATES, unlike SQL
-    # MongoDB doesn't guarantee ACID, unlike SQL. I have to loop through the html table and add or update player
-    # information in the database on at at time. If I accidently kill the script during the loop, it will be a
-    # partial update. It's not all or nothing, like an atomic operation would be.
     for player_data in player_stats:
         if player_data == []:
             continue
