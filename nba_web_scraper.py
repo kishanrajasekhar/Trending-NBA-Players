@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import argparse
 from datetime import date, timedelta
+from time import sleep
 # This url shows to top 100 players of yesterday's basketball games
 # To show a specific date, append these query parameter to the url
 # (e.g January 24, 2020: ?month=01&day=24&year=2020&type=all)
@@ -114,6 +115,7 @@ def get_basketball_reference_html_table(url) -> 'beautiful soup table':
     :return: parsed html table
     """
     html = urlopen(url)
+    sleep(3)  # respect Basketball reference's crawl-delay of 3 seconds
     soup = BeautifulSoup(html, features="html.parser")
     table = soup.findAll('tr')
     return table
