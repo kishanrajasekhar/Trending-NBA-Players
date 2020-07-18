@@ -10,14 +10,17 @@ def setup_query_parser() -> argparse.ArgumentParser:
     :return: The parser
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--year_start', help='year of start date of the player stats to look up')
+    parser.add_argument('--year_start', help='year of start date of the player stats to look up', required=True,
+                        type=int)
     parser.add_argument('--month_start',
-                        help='month (number from 1 to 12) of start date of the player stats to look up')
-    parser.add_argument('--day_start', help='day of start date of the player stats to look up')
-    parser.add_argument('--year_end', help='year of end date of the player stats to look up')
+                        help='month (number from 1 to 12) of start date of the player stats to look up', required=True,
+                        type=int)
+    parser.add_argument('--day_start', help='day of start date of the player stats to look up', required=True, type=int)
+    parser.add_argument('--year_end', help='year of end date of the player stats to look up', required=True, type=int)
     parser.add_argument('--month_end',
-                        help='month (number from 1 to 12) of end date of the player stats to look up')
-    parser.add_argument('--day_end', help='day of end date of the player stats to look up')
+                        help='month (number from 1 to 12) of end date of the player stats to look up', required=True,
+                        type=int)
+    parser.add_argument('--day_end', help='day of end date of the player stats to look up', required=True, type=int)
     return parser
 
 
