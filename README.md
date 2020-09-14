@@ -25,8 +25,9 @@ Trello board (my budget jira): https://trello.com/b/VHNj95qc/nba-data. I'll try 
 4. Activate the virual environment
     1. Windows: `.\my-venv\Scripts\activate.bat`
     2. Mac: `source nba-env/bin/activate`
-5. Run the script: `python nba_web_scraper.py`. You may have to pip install `bs4`. The virtual environment keeps the pip installs from conflicting with other projects.
-6. To exit the virtual environment, type the command `deactivate`
+5. Install the pip packages by running this command: `pip install -r requirements.txt`. The virtual environment keeps the pip installs from conflicting with other projects.
+6. Run the script: `python nba_web_scraper.py`.
+7. To exit the virtual environment, type the command `deactivate`
 
 ## Setup to populate database
 1. Download mongodb
