@@ -51,6 +51,8 @@ e.g.)How to get the cumulative fantasy points of each player from Jan 1st 2020 t
 
 Sample output:
 ```
+Collecting cumulative fantasy points for start date: 2020-01-01 and end date: 2020-03-11
+
 Player: Nikola Jokić, Fantasy Points: 1784.5
 Player: LeBron James, Fantasy Points: 1719.75
 Player: James Harden, Fantasy Points: 1682.0
@@ -59,6 +61,16 @@ Player: Giannis Antetokounmpo, Fantasy Points: 1611.5
 Player: Hassan Whiteside, Fantasy Points: 1558.0
 Player: Nikola Vučević, Fantasy Points: 1557.25
 ...
+```
+
+Specify specific players with the --players paramter
+```python nba_query_stats.py --year_start 2020 --month_start 1 --day_start 1 --year_end 2020 --month_end 3 --day_end 11 --players "LeBron James,Jamal Murray"```
+Output:
+```
+Collecting cumulative fantasy points for start date: 2020-01-01 and end date: 2020-03-11
+
+Player: LeBron James, Fantasy Points: 1719.75
+Player: Jamal Murray, Fantasy Points: 766.5
 ```
 
 Note: The cumulative player stats may not be accurate. By default, a player's game stats will not be saved to the database if the number of fantasy points the player earned that game is less than 25. Those bad games will be ignored when summing up a player's total fantasy points over a period of time. To omit this limit, pass in `--ftpts_limit -0` when you run the script to populate the database (maybe the default should just be 0). Also, a player's stats will not be saved for that date if the player is not included BasketBall Reference's NBA Daily Stats Leaders table for that date (e.g. https://www.basketball-reference.com/friv/dailyleaders.fcgi). I'm using this as a source because I don't want to bloat up the database with stats of every single NBA player. I just want players that fantasy teams might pick up, like the players who make the daily stats leaders list.
