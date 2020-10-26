@@ -92,7 +92,7 @@ def query_nba_stats(start_date: date, end_date: date, players=None) -> []:
         }
     ]
 
-    results = list(player_stats.aggregate(*pipeline))
+    results = list(player_stats.aggregate(pipeline))
     return results
 
 

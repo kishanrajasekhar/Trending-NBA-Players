@@ -105,3 +105,11 @@ class TestMatchesESPNData(unittest.TestCase):
             {"fantasy_points": 42, "name": "Luka Dončić"}
         ]
         self.assertEqual(expected, march_6_to_7_stats)
+
+        # test with specific player name
+        march_6_to_7_stats_luka_only = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=7),
+                                                       players=["Luka Dončić"])
+        expected = [
+            {"fantasy_points": 42, "name": "Luka Dončić"}
+        ]
+        self.assertEqual(expected, march_6_to_7_stats_luka_only)
