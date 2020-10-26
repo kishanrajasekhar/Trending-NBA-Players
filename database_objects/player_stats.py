@@ -8,7 +8,15 @@ from database_objects.team import Team
 # I forgot SQL, but the internet it's more rigid. It seems that changing a schema in SQL is more troublesome.
 # I'll have to look at SQL to see if that's the case.
 class PlayerStats(Document):
-    """A database document of the stats of a player during a game"""
+    """A database document of the stats of a player during a game
+
+    Indexes:
+    player + game_date - this index is formed automatically because a player's stats and the game date are unique (a
+                         player's stats is unique each game). This index is also useful because I can quickly search
+                         the stats of a certain player using the id of the player database object.
+    game_date - I have this index because I want to quickly lookup all statistics in any date range I choose (e.g.
+                January 1st 2020 to March 11th 2020)
+    """
     player = ReferenceField(Player, required=True, unique_with='game_date')
     game_date = DateTimeField(required=True)
     team = ReferenceField(Team, required=True)
