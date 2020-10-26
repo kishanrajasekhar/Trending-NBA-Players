@@ -1,7 +1,8 @@
 import argparse
 from datetime import date
 from database_objects.player_stats import PlayerStats
-from mongoengine import connect
+from database_objects.player import Player
+from mongoengine import connect, DoesNotExist
 
 
 def setup_query_parser() -> argparse.ArgumentParser:
@@ -21,18 +22,35 @@ def setup_query_parser() -> argparse.ArgumentParser:
                         help='month (number from 1 to 12) of end date of the player stats to look up', required=True,
                         type=int)
     parser.add_argument('--day_end', help='day of end date of the player stats to look up', required=True, type=int)
+    parser.add_argument('--players', help='comma seperated list of player names (e.g. "Jamal Murray,Lebron James, etc"',
+                        type=str)
     return parser
 
 
-def query_nba_stats(start_date: date, end_date: date) -> []:
+def query_nba_stats(start_date: date, end_date: date, players=None) -> []:
     """Query the nba stats of players from all the games starting from the specified start date to the end date
     (inclusive).
 
     :param start_date: start date of when to start accumulating the stats (type: datetime.datetime)
     :param end_date: end date of when to stop accumulating the stats (type: datetime.datetime)
+    :param players: a list of player names. If specified, get the stats of these players.
     :return: list of dicts (format: [ {"name": "Nikola Jokić", "fantasy_points": 1784.5}, ... ])
     """
     player_stats = PlayerStats.objects(game_date__gte=start_date, game_date__lte=end_date)
+
+    if players is not None:
+        player_ids = []
+        for p in players:
+            try:
+                first, last = p.split(" ")
+                player_obj = Player.objects.get(first_name=first, last_name=last)
+                player_ids.append(player_obj.id)
+            except ValueError:
+                print(f"Need so specify first and last name for {p}")
+            except DoesNotExist:
+                print(f"Player {p} does not exist")
+        if len(player_ids):
+            player_stats = player_stats(player__in=player_ids)
 
     pipeline = [
         {
@@ -89,6 +107,11 @@ if __name__ == '__main__':
         month_end = int(f'{args.month_end}')
         day_end = int(f'{args.day_end}')
 
+        players = f'{args.players}'
+        if players is not None:
+            players = players.split(",")
+            players = [p.strip() for p in players]
+
         start_date = date(year=year_start, month=month_start, day=day_start)
         end_date = date(year_end, month=month_end, day=day_end)
 
@@ -97,7 +120,7 @@ if __name__ == '__main__':
             print()
             print(f"Collecting cumulative fantasy points for start date: {start_date} and end date: {end_date}")
             print()
-            nba_data = query_nba_stats(start_date, end_date)
+            nba_data = query_nba_stats(start_date, end_date, players)
             for data in nba_data:
                 print("Player:", data["name"]+",", "Fantasy Points:", data["fantasy_points"])
         else:
