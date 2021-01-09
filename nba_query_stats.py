@@ -3,6 +3,7 @@ from datetime import date
 from database_objects.player_stats import PlayerStats
 from database_objects.player import Player
 from mongoengine import connect, DoesNotExist
+import codecs
 
 
 def setup_query_parser() -> argparse.ArgumentParser:
@@ -24,6 +25,7 @@ def setup_query_parser() -> argparse.ArgumentParser:
     parser.add_argument('--day_end', help='day of end date of the player stats to look up', required=True, type=int)
     parser.add_argument('--players', help='comma seperated list of player names (e.g. "Jamal Murray,Lebron James, etc"',
                         type=str)
+    parser.add_argument('--output_file', help='Specify an output file name to write the player stats to', type=str)
     return parser
 
 
@@ -114,6 +116,9 @@ if __name__ == '__main__':
             players = players.split(",")
             players = [p.strip() for p in players]
 
+        output_file = f'{args.output_file}'
+        file_writer = None if output_file == 'None' else codecs.open(output_file, 'w', 'utf-8')
+
         start_date = date(year=year_start, month=month_start, day=day_start)
         end_date = date(year_end, month=month_end, day=day_end)
 
@@ -122,10 +127,20 @@ if __name__ == '__main__':
             print()
             print(f"Collecting cumulative fantasy points for start date: {start_date} and end date: {end_date}")
             print()
+            if file_writer is not None:
+                file_writer.write(
+                    f"Collecting cumulative fantasy points for start date: {start_date} and end date: {end_date}\n\n")
             nba_data = query_nba_stats(start_date, end_date, players)
+
             for data in nba_data:
                 # print("Player:", data["name"]+",", "Fantasy Points:", data["fantasy_points"])
                 print(data["name"]+":", data["fantasy_points"])
+                if file_writer is not None:
+                    file_writer.write("{}: {}\n".format(data["name"], data["fantasy_points"]))
+            if file_writer is not None:
+                print()
+                print(f"Data written to {output_file}")
+                file_writer.close()
         else:
             print("End date cannot be after start date.")
             print(f"You specified start date: {start_date} and end date: {end_date}")
