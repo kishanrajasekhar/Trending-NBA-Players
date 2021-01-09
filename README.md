@@ -63,7 +63,7 @@ Player: Nikola Vučević, Fantasy Points: 1557.25
 ...
 ```
 
-Specify specific players with the --players paramter
+### Specify specific players with the --players agrument
 ```python nba_query_stats.py --year_start 2020 --month_start 1 --day_start 1 --year_end 2020 --month_end 3 --day_end 11 --players "LeBron James,Jamal Murray"```
 Output:
 ```
@@ -72,6 +72,10 @@ Collecting cumulative fantasy points for start date: 2020-01-01 and end date: 20
 Player: LeBron James, Fantasy Points: 1719.75
 Player: Jamal Murray, Fantasy Points: 766.5
 ```
+
+### How to write stats to a file with the --output_file argument
+```python nba_query_stats.py --year_start 2021 --month_start 1 --day_start 1 --year_end 2021 --month_end 1 --day_end 8 --output_file stats.txt```
+(If using Windows, view this file in Wordpad. Notepad doesn't show players in its own line (smh).
 
 Note: The cumulative player stats may not be accurate. By default, a player's game stats will not be saved to the database if the number of fantasy points the player earned that game is less than 25. Those bad games will be ignored when summing up a player's total fantasy points over a period of time. To omit this limit, pass in `--ftpts_limit -0` when you run the script to populate the database (maybe the default should just be 0). Also, a player's stats will not be saved for that date if the player is not included BasketBall Reference's NBA Daily Stats Leaders table for that date (e.g. https://www.basketball-reference.com/friv/dailyleaders.fcgi). I'm using this as a source because I don't want to bloat up the database with stats of every single NBA player. I just want players that fantasy teams might pick up, like the players who make the daily stats leaders list.
 
