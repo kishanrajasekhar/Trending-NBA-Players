@@ -46,7 +46,7 @@ def query_nba_stats(start_date: date, end_date: date, players=None) -> []:
                 player_obj = Player.objects.get(first_name=first, last_name=last)
                 player_ids.append(player_obj.id)
             except ValueError:
-                print(f"Need so specify first and last name for {p}")
+                print(f"Need to specify first and last name for {p}")
             except DoesNotExist:
                 print(f"Player {p} does not exist")
         if len(player_ids):
@@ -108,6 +108,8 @@ if __name__ == '__main__':
         day_end = int(f'{args.day_end}')
 
         players = f'{args.players}'
+        if players == 'None':
+            players = None
         if players is not None:
             players = players.split(",")
             players = [p.strip() for p in players]
@@ -122,7 +124,8 @@ if __name__ == '__main__':
             print()
             nba_data = query_nba_stats(start_date, end_date, players)
             for data in nba_data:
-                print("Player:", data["name"]+",", "Fantasy Points:", data["fantasy_points"])
+                # print("Player:", data["name"]+",", "Fantasy Points:", data["fantasy_points"])
+                print(data["name"]+":", data["fantasy_points"])
         else:
             print("End date cannot be after start date.")
             print(f"You specified start date: {start_date} and end date: {end_date}")
