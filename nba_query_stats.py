@@ -26,6 +26,7 @@ def setup_query_parser() -> argparse.ArgumentParser:
     parser.add_argument('--players', help='comma seperated list of player names (e.g. "Jamal Murray,Lebron James, etc"',
                         type=str)
     parser.add_argument('--output_file', help='Specify an output file name to write the player stats to', type=str)
+    parser.add_argument('--formatted', help='Display stats in a formatted way', action='store_true')
     return parser
 
 
@@ -60,6 +61,9 @@ def query_nba_stats(start_date: date, end_date: date, players=None) -> []:
                 '_id': '$player',
                 'fantasy_points': {
                     '$sum': '$fantasy_points'
+                },
+                'num_games': {
+                    '$sum': 1
                 }
             }
         }, {
@@ -77,6 +81,7 @@ def query_nba_stats(start_date: date, end_date: date, players=None) -> []:
             '$project': {
                 '_id': 0,
                 'fantasy_points': 1,
+                'num_games': 1,
                 'name': {
                     '$concat': [
                         {
@@ -108,6 +113,7 @@ if __name__ == '__main__':
         year_end = int(f'{args.year_end}')
         month_end = int(f'{args.month_end}')
         day_end = int(f'{args.day_end}')
+        formatted  = args.formatted
 
         players = f'{args.players}'
         if players == 'None':
@@ -133,10 +139,19 @@ if __name__ == '__main__':
             nba_data = query_nba_stats(start_date, end_date, players)
 
             for data in nba_data:
-                # print("Player:", data["name"]+",", "Fantasy Points:", data["fantasy_points"])
-                print(data["name"]+":", data["fantasy_points"])
+                if data["num_games"] > 1:
+                    n_games =  "({} games)".format(data["num_games"])
+                else:
+                    n_games = "({} game)".format(data["num_games"])
+                ftpts_formatted = '{0:4.2f}'.format(data["fantasy_points"])
+
+                if formatted:
+                    print('{0:25s} {1:>7s} {2:10s}'.format(data["name"] +":", ftpts_formatted, n_games))
+                else:
+                    print(data["name"] + ":", data["fantasy_points"], n_games)
+
                 if file_writer is not None:
-                    file_writer.write("{}: {}\n".format(data["name"], data["fantasy_points"]))
+                    file_writer.write('{0:25s} {1:>7s} {2:10s}\n'.format(data["name"] + ":", ftpts_formatted, n_games))
             if file_writer is not None:
                 print()
                 print(f"Data written to {output_file}")

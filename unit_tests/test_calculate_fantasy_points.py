@@ -55,9 +55,11 @@ class TestMatchesESPNData(unittest.TestCase):
 
         total_hassan_ftpts = 65.5 + 43.75 + 49
         march_6_to_11_stats = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=11))
-        self.assertEqual([{'fantasy_points': total_hassan_ftpts, 'name': 'Hassan Whiteside'}], march_6_to_11_stats)
+        self.assertEqual([{'fantasy_points': total_hassan_ftpts, 'name': 'Hassan Whiteside', 'num_games': 3}],
+                         march_6_to_11_stats)
         march_6_to_9_stats = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=9))
-        self.assertEqual([{'fantasy_points': total_hassan_ftpts-49, 'name': 'Hassan Whiteside'}], march_6_to_9_stats)
+        self.assertEqual([{'fantasy_points': total_hassan_ftpts-49, 'name': 'Hassan Whiteside', 'num_games': 2 }],
+                         march_6_to_9_stats)
 
         # Create a player object for Luka Dončić
         luka = Player(first_name="Luka", last_name="Dončić")
@@ -87,22 +89,22 @@ class TestMatchesESPNData(unittest.TestCase):
         total_luka_ftpts = 42 + 73.5 + 65.75 + 55
         march_6_to_11_stats = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=11))
         expected = [
-            {"fantasy_points": total_luka_ftpts, "name": "Luka Dončić"},
-            {"fantasy_points": total_hassan_ftpts, "name": "Hassan Whiteside"}
+            {"fantasy_points": total_luka_ftpts, "name": "Luka Dončić", "num_games": 4},
+            {"fantasy_points": total_hassan_ftpts, "name": "Hassan Whiteside", "num_games": 3}
         ]
         self.assertEqual(expected, march_6_to_11_stats)
         march_6_to_10_stats = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=10))
         expected = [
-            {"fantasy_points": total_luka_ftpts-55, "name": "Luka Dončić"},
-            {"fantasy_points": total_hassan_ftpts, "name": "Hassan Whiteside"}
+            {"fantasy_points": total_luka_ftpts-55, "name": "Luka Dončić", "num_games": 3},
+            {"fantasy_points": total_hassan_ftpts, "name": "Hassan Whiteside", "num_games": 3}
         ]
         self.assertEqual(expected, march_6_to_10_stats)
         # test up to march 7th. Hassan has 2 games, Luka only has 1. Hassan will have more ftpts, so he will show up
         # first
         march_6_to_7_stats = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=7))
         expected = [
-            {"fantasy_points": 65.5+43.75, "name": "Hassan Whiteside"},
-            {"fantasy_points": 42, "name": "Luka Dončić"}
+            {"fantasy_points": 65.5+43.75, "name": "Hassan Whiteside", "num_games": 2},
+            {"fantasy_points": 42, "name": "Luka Dončić", "num_games": 1}
         ]
         self.assertEqual(expected, march_6_to_7_stats)
 
@@ -110,6 +112,6 @@ class TestMatchesESPNData(unittest.TestCase):
         march_6_to_7_stats_luka_only = query_nba_stats(date(year=2020, month=3, day=6), date(year=2020, month=3, day=7),
                                                        players=["Luka Dončić"])
         expected = [
-            {"fantasy_points": 42, "name": "Luka Dončić"}
+            {"fantasy_points": 42, "name": "Luka Dončić", "num_games": 1}
         ]
         self.assertEqual(expected, march_6_to_7_stats_luka_only)
