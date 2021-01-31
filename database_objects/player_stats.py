@@ -68,4 +68,63 @@ Furthermore, the advantage of the embedded data modal is that all you informatio
 updating that document, you can do an atomic update to any of the fields. You don't have to worry about creating 
 transactions for multi-collection documents. Luckily, I don't have to worry about updates for this project.
 More information: https://docs.mongodb.com/manual/tutorial/model-data-for-atomic-operations/
+
+-----------------
+
+If Player did have a list of PlayerStats, here is how the Mongo aggregation pipeline would look like for getting the
+cumulative fantasy points for a certain data range.
+
+For example, let's say I want the cumulative fantasy points for each player from January 22, 2021 to January 26, 2021 
+(inclusive).
+
+Notes:
+ - the first stage filters out the list of stats that are not in the specified date range. Hence, the $filter command.
+ - the second stage sums up the fantasy points from all the remaining stats in the list
+ - the third stage again filter out any players who did not get any fantasy points in the specified date range.
+
+[
+    {
+        '$addFields': {
+            'stats': {
+                '$filter': {
+                    'input': '$stats', 
+                    'as': 'stat', 
+                    'cond': {
+                        '$and': [
+                            {
+                                '$gte': [
+                                    '$$stat.game_date', 
+                                    datetime(2021, 1, 22, 0, 0, 0, tzinfo=timezone.utc).strftime('%a %b %d %Y %H:%M:%S %Z')
+                                ]
+                            }, {
+                                '$lte': [
+                                    '$$stat.game_date', 
+                                    datetime(2021, 1, 26, 0, 0, 0, tzinfo=timezone.utc).strftime('%a %b %d %Y %H:%M:%S %Z')
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }, {
+        '$addFields': {
+            'total_fantasy_points': {
+                '$sum': '$stats.fantasy_points'
+            }, 
+            'num_games': {
+                '$size': '$stats'
+            }
+        }
+    }, {
+        '$match': {
+            'total_fantasy_points': {
+                '$gt': 0
+            }
+        }
+    }
+]
+
+Of course, if you want to query on specific players, just add a $match stage at the beginning of the pipeline and query 
+on first_name and/or last_name.
 """
