@@ -3,10 +3,10 @@ from database_objects.player import Player
 from database_objects.team import Team
 
 
-# LEARNING NOTE: MongoDb allows for a flexible schema. I can add/edit/remove fields any time I want here, in Python,
+# LEARNING NOTE: MongoDB allows for a flexible schema. I can add/edit/remove fields any time I want here, in Python,
 # without messing with the database.
-# I forgot SQL, but the internet it's more rigid. It seems that changing a schema in SQL is more troublesome.
-# I'll have to look at SQL to see if that's the case.
+# It's been a while since I've used SQL, but the internet it's more rigid. It seems that changing a schema in SQL is
+# more troublesome. I'll have to look at SQL to see if that's the case.
 class PlayerStats(Document):
     """A database document of the stats of a player during a game
 
@@ -47,3 +47,25 @@ class PlayerStats(Document):
             }
         ]
     }
+
+
+"""
+Learning Note (for the future):
+
+I made PlayerStats a separate collection from the Player collection. That's fine and all, but in order to fully take
+advantage of Mongo's document database, I should have made PlayerStats an embedded document and add an attribute 'stats'
+to Player which would be a list of PlayerStats. That way, each Player document already contains its list of stats. I 
+wouldn't have to to a $lookup to get a stats for a player. That's truly taking advantage of MongoDB's document database.
+
+The design I have now, where PlayerStats has a reference to Player is known as the normalized data model. Relational 
+databases use this model, where a row in a table have references to a row of another table. The Mongo preferred approach
+of having embedded documents in a single document is known as the embedded data model (a.k.a. denormalized data model).
+
+Mongo allows you to use both designs. There are certain scenarios where one design is better than the other. 
+More information: https://docs.mongodb.com/manual/core/data-model-design
+
+Furthermore, the advantage of the embedded data modal is that all you information is in one document. So if you're 
+updating that document, you can do an atomic update to any of the fields. You don't have to worry about creating 
+transactions for multi-collection documents. Luckily, I don't have to worry about updates for this project.
+More information: https://docs.mongodb.com/manual/tutorial/model-data-for-atomic-operations/
+"""
