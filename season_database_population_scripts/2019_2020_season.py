@@ -4,13 +4,10 @@ from season_database_population_scripts.season_parser import setup_season_parser
 from mongoengine import connect
 import datetime
 
-if __name__ == '__main__':
-    season_start = get_date_object(2019, 10, 22)
-    # temporary end at March 11th because of Covid 19
-    # I don't know if the season will resume.
-    season_temporary_end = get_date_object(2020, 3, 11)
-    print('season start:', season_start)
-    print('season temporary end:', season_temporary_end)
+
+def season_populator(start_date, end_date):
+    print('season start:', start_date)
+    print('season temporary end:', end_date)
     url = NBA_REFERENCE_URL
     args = setup_season_parser().parse_args()
     ftpts_limit = f'{args.ftpts_limit}'
@@ -24,9 +21,18 @@ if __name__ == '__main__':
     connect('nba')
     populate_nba_teams()
     print()
-    data_date = season_start
-    while data_date <= season_temporary_end:
+    data_date = start_date
+    while data_date <= end_date:
         print(data_date.year, data_date.month, data_date.day)
         populate_player_stats(url, data_date.year, data_date.month, data_date.day, ftpts_limit, update)
         data_date = data_date + datetime.timedelta(days=1)
         print()
+
+
+if __name__ == '__main__':
+    season_start = get_date_object(2019, 10, 22)
+    # temporary end at March 11th because of Covid 19
+    # I don't know if the season will resume.
+    season_temporary_end = get_date_object(2020, 3, 11)
+
+    season_populator(season_start, season_temporary_end)
