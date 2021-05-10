@@ -30,14 +30,20 @@ Trello board (my budget jira): https://trello.com/b/VHNj95qc/nba-data. I'll try 
 7. To exit the virtual environment, type the command `deactivate`
 
 ## Setup to populate database
+#### Option 1: Run the Docker container
+1. Download docker and docker-compose (downloading Docker desktop will give you both of these)
+2. Open up a terminal, `cd` to the project folder, and run `docker-compose up -d`.
+#### Option 2: Download Mongo
 1. Download mongodb
     1. Windows 10 setup
         1. Go to environment variables. Under System Variables look for the variable called "Path". Open it up and the location of the mongodb directory you just loaded. There is a "bin" directory. Make sure the path you put points to that directory (e.g "C:\Program Files\MongoDB\Server\4.2\bin")
 2. Open a cmd and run `mongod` to get mongodb running.
-3. In the python virtual environment run the script `python nba_database_populator.py`. Check your database afterwards to see if the `team` collection in your database has been populated. The `player` collection might be populated as well.
-    1. Tools to look at your database
-        1. MongoDB Compass: Click the option "Fill in connection fields individually. Enter `localhost` for hostname and `27017` for the port (the defaults).
-        2. Robo 3T
+
+In the python virtual environment run the script `python nba_database_populator.py`. Check your database afterwards to see if the `team` collection in your database has been populated. The `player` collection might be populated as well.
+
+Tools to look at your database
+1. MongoDB Compass: Click the option "Fill in connection fields individually. Enter `localhost` for hostname and `27017` for the port (the defaults).
+2. Robo 3T
 
 ### How to populate the database with game stats of a specific date
   - e.g.) March 11th 2020: `python nba_database_populator.py --month 3 --day 11 --year 2020`
