@@ -87,3 +87,4 @@ Note: The cumulative player stats may not be accurate. By default, a player's ga
 
 ## Etc.
   - how to not have git ask for password all the time if you used https instead of ssh: `git config credential.helper store`
+  - note to self: If using Docker, prefix the Python commands above with `docker exec -it nbadatabase_flask_1`. However, any python script that connects to Mongo won't work unless `host="mongo"` is passed as an argument in the `connect` function. However if you do that, then running the python command from your virtual env will not work anymore. 
