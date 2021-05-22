@@ -5,4 +5,4 @@ RUN pip install -r requirements.txt
 ADD . /app
 EXPOSE 5000
 ENTRYPOINT [ "python" ]
-CMD [ "my_nba_flask_test.py" ]
+CMD [ "app.py" ]
