@@ -1,4 +1,6 @@
 from mongoengine import Document, StringField, DateTimeField, ListField
+from flask import url_for
+import json
 
 
 class Player(Document):
@@ -14,3 +16,10 @@ class Player(Document):
     rookie_of_year_dates = ListField(DateTimeField(), null=True)
     mvp_year_dates = ListField(DateTimeField(), null=True)
     sixth_man_year_dates = ListField(DateTimeField(), null=True)
+
+    def to_json(self):
+        response = json.loads(super().to_json())
+        response['self'] = url_for("players.get_player", object_id=self.id)
+        response['id'] = response['_id']['$oid']
+        del response['_id']
+        return json.dumps(response)
