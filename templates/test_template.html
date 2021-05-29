@@ -1,0 +1,21 @@
+<!--This is a test template-->
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>NBA Trending Players</title>
+</head>
+
+<body>
+    <h1>NBA info...</h1>
+    <br>
+    <p>Some players...</p>
+    <ul>
+        {% for name in player_names %}
+            <li>{{ name }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

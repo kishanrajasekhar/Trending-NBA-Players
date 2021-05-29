@@ -1,13 +1,17 @@
 from mongoengine import connect
-from flask import Flask
+from flask import Flask, render_template
 from REST_endpoints import players
+from database_objects.player import Player
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def hello_world():
-    return "<p>NBA endpoint</p>"
+    some_players = Player.objects[:10]
+    player_names = [f'{p.first_name} {p.last_name}' for p in some_players]
+    return render_template("test_template.html",
+                           player_names=player_names)
 
 
 if __name__ == "__main__":
