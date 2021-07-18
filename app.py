@@ -1,6 +1,6 @@
 from mongoengine import connect
 from flask import Flask, render_template
-from REST_endpoints import players
+from REST_endpoints import players, stats
 from database_objects.player import Player
 
 app = Flask(__name__)
@@ -16,5 +16,6 @@ def hello_world():
 
 if __name__ == "__main__":
     app.register_blueprint(players.bp)
+    app.register_blueprint(stats.bp)
     connect('nba', host="mongo")
     app.run(host='0.0.0.0', port=5000, debug=True)

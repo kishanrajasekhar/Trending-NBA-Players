@@ -1,6 +1,8 @@
 from mongoengine import Document, ReferenceField, BooleanField, IntField, DateTimeField, FloatField
 from database_objects.player import Player
 from database_objects.team import Team
+from flask import url_for
+import json
 
 
 # LEARNING NOTE: MongoDB allows for a flexible schema. I can add/edit/remove fields any time I want here, in Python,
@@ -47,6 +49,18 @@ class PlayerStats(Document):
             }
         ]
     }
+
+    def to_json(self):
+        response = json.loads(super().to_json())
+        response['self'] = url_for("stats.get_stats", object_id=self.id)
+        response['id'] = response['_id']['$oid']
+        response['player'] = {
+            "self": url_for("players.get_player", object_id=self.player.id),
+            "first_name": self.player.first_name,
+            "last_name": self.player.last_name
+        }
+        del response['_id']
+        return json.dumps(response)
 
 
 """
