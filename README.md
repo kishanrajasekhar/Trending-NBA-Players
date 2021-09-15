@@ -47,6 +47,16 @@ Tools to look at your database
 
 ### How to populate the database with game stats of a specific date
   - e.g.) March 11th 2020: `python nba_database_populator.py --month 3 --day 11 --year 2020`
+
+### How to populate the database within Docker (e.g. populating 2020-2021 season)
+ `docker exec -it nbadatabase_flask_1 python`
+ ```
+ >>> from datetime import date
+ >>> from dev_tools import database_populator
+ >>> start_date = date(year=2020, month=12, day=22)
+ >>> end_date = date(year=2021, month=5, day=16)
+ >>> database_populator(start_date, end_date)
+ ```
   
 ### How to quickly populate the database with game stats of the 2019 to 2020 season
   - e.g.) `python season_database_population_scripts/2019_2020_season.py`... Or at least this is how I want this to work. This didn't work for me from the command line. I had to run the `2019_2020_season.py` script from PyCharm.
