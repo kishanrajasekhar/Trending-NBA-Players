@@ -19,16 +19,19 @@ TRIPLE_DOUBLE_FANTASY = 12
 QUADRUPLE_DOUBLE_FANTASY = 400
 
 
-def get_date_object(year, month, day) -> str:
-    """Return a date object with the year, month, and date specified.
+def get_date_object(year, month, day) -> date:
+    """Return a datetime.date object with the year, month, and date specified.
 
-    :param year: the year parameter of the url. The value is the year number (e.g 2020)
-    :param month: the month parameter of the url. The value is a number from 1 to 12
-    :param day: the day parameter of the url. The value is a number from 1 to 31
-    :return: The completed url
+    The function makes sure the date isn't later than yesterday because you can't get stats of future dates.
+
+    :param str or int year: the year parameter of the url. The value is the year number (e.g 2020)
+    :param str or int month: the month parameter of the url. The value is a number from 1 to 12
+    :param str or int day: the day parameter of the url. The value is a number from 1 to 31
+    :return: A datetime.date object
+    :rtype: date
     """
     if year == 'None' and month == 'None' and day == 'None':
-        # default url is used, which shows the stats of yesterday's games
+        # default date is used, which shows the stats of yesterday's games
         today = date.today()
         yesterday = today - timedelta(days=1)
         return yesterday

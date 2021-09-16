@@ -6,6 +6,12 @@ import datetime
 
 
 def database_populator(start_date, end_date):
+    """Populate the database with stats of the games from the specified start date to the specified end date.
+
+    :param datetime.date start_date: The start date of when to get stats.
+    :param datetime.date end_date: The end date of when to get stats.
+    :rtype: None
+    """
     print('season start:', start_date)
     print('season temporary end:', end_date)
     url = NBA_REFERENCE_URL

@@ -129,7 +129,7 @@ if __name__ == '__main__':
         end_date = date(year_end, month=month_end, day=day_end)
 
         if start_date <= end_date:
-            connect('nba')
+            connect('nba', host='mongo')
             print()
             print(f"Collecting cumulative fantasy points for start date: {start_date} and end date: {end_date}")
             print()
